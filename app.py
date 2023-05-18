@@ -1,64 +1,60 @@
+#import library ที่ต้องใช้ทั้งหมด
+from fastai.vision.all import (
+    load_learner,
+    PILImage,
+)
+import glob
+from random import shuffle
+import urllib.request
+from PIL import Image
+
+#import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
-import numpy as np
-import PIL.Image
-import pandas as pd
-import os
-from fastai.vision.all import Path,load_learner,Image
 
-path = Path('models/dbc_resnet50_new_fastai.pkl')
+# โหลดโมเดลจากแหล่งข้อมูลในอินเตอร์เน็ตเพื่อประหยัดพื้นที่เวลา deploy บน heroku
+MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
+urllib.request.urlretrieve(MODEL_URL, "model.pkl")
+learn_inf = load_learner('model.pkl', cpu=True)
 
-learn = load_learner(path)
+#function การทำนาย
+def predict(img, learn):
 
-df = pd.read_csv("label.csv",index_col=['Index'])
+    # ทำนายจากโมเดลที่ให้
+    pred, pred_idx, pred_prob = learn.predict(img)
 
-def get_name(cat_num):
-    return df[df.index == cat_num].reset_index(drop=True)['Cat_Name'][0]
-def get_details(cat_num):
-    temp = df[df.index == cat_num].T.reset_index()[1:]
-    temp.columns = ['Major','Description']
-    return temp
+    # โชว์ผลการทำนาย
+    st.success(f"This is {pred} with the probability of {pred_prob[pred_idx]*100:.02f}%")
+    
+    # โชว์รูปที่ถูกทำนาย
+    st.image(img, use_column_width=True)
 
-def predict_img(img):
-    #pil_img = PIL.Image.open(img)
-    img = np.asarray(img) # Image to display   
-    return get_name(int(learn.predict(img)[0])),round(np.max(np.array(learn.predict(img)[2]))*100,2),get_details(int(learn.predict(img)[0]))
+# ใส่ title ของ sidebar
+st.sidebar.write('### Enter a dog image to classify')
 
-html_temp = """
-    <div style="background-color:#f63366;padding:10px;margin-bottom: 25px">
-    <h2 style="color:white;text-align:center;">Flower Prediction App</h2>
-    <p style="color:white;text-align:center;" >This is a <b>Streamlit</b> app use for prediction of the <b>102 types of flower</b>.</p>
-    </div>
-    """
-st.markdown(html_temp,unsafe_allow_html=True)
+# radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
+option = st.sidebar.radio('', ['Use a validation image', 'Use your own image'])
+# โหลดรูปจาก validation set แล้ว shuffle
+valid_images = glob.glob('images/valid/*/*')
+shuffle(valid_images)
 
-#image = PIL.Image.open('bg.jpg')
-#st.image(image, use_column_width=True)
+if option == 'Use a validation image':
+    st.sidebar.write('### Select a validation image')
+    fname = st.sidebar.selectbox('', valid_images)
 
-option = st.radio('', ['Choose a test image', 'Choose your own image'])
-if option == 'Choose your own image':
-    uploaded_file = st.file_uploader("Choose an image...", type="jpg") #file upload
-    if uploaded_file is not None:
-        img = PIL.Image.open(uploaded_file)
-        pred_class, prob, details = predict_img(img)
-        col1, col2 = st.beta_columns(2)
-        with col1:
-            st.image(img, width=200)
-        with col2:
-            st.success("Flower Name:  [" + str(pred_class) + "] ")
-            st.info("Probability: [" + str(prob) + '%]')
-        st.subheader("Flower Details:")
-        st.table(details)
 else:
-    test_images = os.listdir('sample_images')
-    test_image = st.selectbox('Please select a test image:', test_images)
-    file_path = 'sample_images/' + test_image
-    img = PIL.Image.open(file_path)
-    pred_class, prob, details = predict_img(img)
-    col1, col2 = st.beta_columns(2)
-    with col1:
-        st.image(img, width=200)
-    with col2:
-        st.success("Flower Name:  [" + str(pred_class) + "] ")
-        st.info("Probability: [" + str(prob) + '%]')
-    st.subheader("Flower Details:")
-    st.table(details)
+    st.sidebar.write('### Select an image to upload')
+    fname = st.sidebar.file_uploader('',
+                                     type=['png', 'jpg', 'jpeg'],
+                                     accept_multiple_files=False)
+    if not fname == None:
+        img = Image.open(fname).resize([224,224])
+        
+        # เรียก function ทำนาย
+        predict(img, learn_inf)
+
+##################################
+# main page
+##################################
+
+# ใส่ title ของ main page
+st.title("Chocolate Chip vs Raisin Cookies")
