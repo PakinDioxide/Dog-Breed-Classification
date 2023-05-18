@@ -69,5 +69,5 @@ def predict(img, learn):
 # เปิดรูป
 # img = Image.open(fname)
 
-# # เรียก function ทำนาย
-# predict(img, learn_inf)
+# เรียก function ทำนาย
+predict(img, learn_inf)
