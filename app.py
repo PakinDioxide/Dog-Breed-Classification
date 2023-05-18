@@ -6,7 +6,7 @@ import torch
 from fastai.vision.all import *
 
 # Load the model
-MODEL_URL = 'https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl'
+MODEL_URL = 'https://github.com/cstorm125/choco-raisin/raw/main/notebooks/models/resnet34_finetune1e3_5p.pkl'
 model_file = 'dbc_resnet50_new_fastai.pkl'
 if not Path(model_file).exists():
     r = requests.get(MODEL_URL)
