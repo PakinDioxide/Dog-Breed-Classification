@@ -45,7 +45,7 @@ else:
     if not fname == None:
         img = Image.open(fname)
         img.resize([224, 224])
-        img.show
+        st.image(img)
 
 ##################################
 # main page
