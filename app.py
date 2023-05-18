@@ -19,9 +19,9 @@ class Predict:
         if uploaded_file is not None:
             return PILImage.create((uploaded_file))
         return None
-   def display_output(self):
+  def display_output(self):
         st.image(self.img.to_thumb(500,500), caption='Uploaded Image')
-   def get_prediction(self):
+  def get_prediction(self):
         if st.button('Classify'):
             pred, pred_idx, probs = self.learn_inference.predict(self.img)
             st.write(f'**Prediction**: {pred}')
