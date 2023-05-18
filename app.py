@@ -1,74 +1,36 @@
-#import library ที่ต้องใช้ทั้งหมด
-from fastai.vision.all import (
-    load_learner,
-    PILImage,
-)
-import glob
-from random import shuffle
-import urllib.request
-from PIL import Image
-
-#import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
+from PIL import Image
+import requests
+from io import BytesIO
+import torch
+from fastai.vision.all import *
 
-# โหลดโมเดลจากแหล่งข้อมูลในอินเตอร์เน็ตเพื่อประหยัดพื้นที่เวลา deploy บน heroku
-MODEL_URL = "https://github.com/cstorm125/choco-raisin/raw/main/notebooks/models/resnet34_finetune1e3_5p.pkl"
-urllib.request.urlretrieve(MODEL_URL, "model.pkl")
-learn_inf = load_learner('model.pkl', cpu=True)
+# Load the model
+MODEL_URL = 'https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl'
+model_file = 'dbc_resnet50_new_fastai.pkl'
+if not Path(model_file).exists():
+    r = requests.get(MODEL_URL)
+    with open(model_file, 'wb') as f:
+        f.write(r.content)
 
-# เราจะแบ่งหน้าจอเป็น 
-# 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
-# 2. main page ประกอบด้วยรูปและคำทำนาย
+learn_inf = load_learner(model_file, cpu=True)
 
-##################################
-# sidebar
-##################################
+# Page title
+st.title("Dog Breed Classification")
 
-# ใส่ title ของ sidebar
-st.sidebar.write('### Enter cookie to classify')
+# Image upload and prediction
+uploaded_file = st.file_uploader("Upload an image", type=['png', 'jpg', 'jpeg'])
 
-# radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
-option = st.sidebar.radio('', ['Use a validation image', 'Use your own image'])
-# โหลดรูปจาก validation set แล้ว shuffle
-valid_images = glob.glob('images/valid/*/*')
-shuffle(valid_images)
+if uploaded_file is not None:
+    # Load and display the uploaded image
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Uploaded Image", use_column_width=True)
 
-if option == 'Use a validation image':
-    st.sidebar.write('### Select a validation image')
-    fname = st.sidebar.selectbox('', valid_images)
+    # Perform prediction
+    pred, pred_idx, pred_prob = learn_inf.predict(image)
+    breed = pred.capitalize()
+    probability = pred_prob[pred_idx] * 100
 
-else:
-    st.sidebar.write('### Select an image to upload')
-    fname = st.sidebar.file_uploader('Select an image',
-                                     type=['png', 'jpg', 'jpeg'],
-                                     accept_multiple_files=False)
-    if not fname == None:
-        oriimg = Image.open(fname)
-        img = oriimg.resize([224, 224])
-        st.image(img)
-
-##################################
-# main page
-##################################
-
-# ใส่ title ของ main page
-st.title("Chocolate Chip vs Raisin Cookies")
-
-#function การทำนาย
-def predict(img, learn):
-
-    # ทำนายจากโมเดลที่ให้
-#     pred = learn.predict(img)
-
-    # โชว์ผลการทำนาย
-#     st.success(f"This is {pred} cookie with the probability of") # {pred_prob[pred_idx]*100:.02f}%")
-    st.write(learn.predict(img))
-    
-    # โชว์รูปที่ถูกทำนาย
-    st.success(oriimg, use_column_width=True)
-
-# เปิดรูป
-# img = Image.open(fname)
-
-# เรียก function ทำนาย
-predict(img, learn_inf)
+    # Display the predicted dog breed and probability
+    st.success(f"Predicted Breed: {breed}")
+    st.info(f"Probability: {probability:.2f}%")
