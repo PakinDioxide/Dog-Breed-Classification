@@ -5,7 +5,7 @@ import urllib
 from fastbook import *
 
 
-uploaded_file = st.file_uploader("Choose a file")
+uploaded_file = st.file_uploader("Choose a dog image to predict!", type=['png', 'jpg', 'jpeg'], accept_multiple_files=False)
 if uploaded_file is not None:
     img = Image.open(uploaded_file)
     st.image(img)
