@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 import urllib
+from fastbook import *
 
 
 uploaded_file = st.file_uploader("Choose a file")
