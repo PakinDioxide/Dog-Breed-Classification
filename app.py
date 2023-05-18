@@ -1,33 +1,75 @@
-import pathlib
-from pathlib import Path 
+#import library ที่ต้องใช้ทั้งหมด
+from fastai.vision.all import (
+    load_learner,
+    PILImage,
+)
+import glob
+from random import shuffle
+import urllib.request
+from PIL import Image
+import os
+
+#import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
-from fastai.vision.all import *
-from fastai.vision.widgets import *
 
-learn_inf = load_learner('/app/dog-breed-classification/dbc_resnet50_new_fastai.pkl')
+import pathlib
+temp = pathlib.PosixPath
+pathlib.PosixPath = pathlib.WindowsPath
 
-class Predict:    
-  def __init__(self, filename):
-        self.learn_inference = load_learner(Path()/filename)               
-        self.img = self.get_image_from_upload()
-        if self.img is not None:
-            self.display_output()
-            self.get_prediction()
-  @staticmethod
-  def get_image_from_upload():
-        uploaded_file = st.file_uploader("Upload Files",type=['png','jpeg', 'jpg'])
-        if uploaded_file is not None:
-            return PILImage.create((uploaded_file))
-        return None
-  def display_output(self):
-        st.image(self.img.to_thumb(500,500), caption='Uploaded Image')
-  def get_prediction(self):
-        if st.button('Classify'):
-            pred, pred_idx, probs = self.learn_inference.predict(self.img)
-            st.write(f'**Prediction**: {pred}')
-            st.write(f'**Probability**: {probs[pred_idx]*100:.02f}%')
-        else:
-             st.write(f'Click the button to classify')
-if __name__=='__main__':
-   file_name='resnet50.pkl'
-predictor = Predict(file_name)
+learn_inf = load_learner("C:\\Users\\young\\Documents\\GitHub\\Dog-Breed-Classification_2\\models\\dbc_resnet50_new_fastai.pkl")
+
+# เราจะแบ่งหน้าจอเป็น 
+# 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
+# 2. main page ประกอบด้วยรูปและคำทำนาย
+
+##################################
+# sidebar
+##################################
+
+#function การทำนาย
+def predict(img, learn):
+
+    # ทำนายจากโมเดลที่ให้
+    pred, pred_idx, pred_prob = learn.predict(img)
+    
+    pred = ' '.join(pred.split('_')[1:])
+
+    # โชว์ผลการทำนาย
+    st.success(f'This is "{pred} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%')
+    
+    # โชว์รูปที่ถูกทำนาย
+    st.image(img, use_column_width=True)
+
+# ใส่ title ของ sidebar
+st.sidebar.write('### Enter cookie to classify')
+
+# radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
+option = st.sidebar.radio('', ['Use a validation image', 'Use your own image'])
+# โหลดรูปจาก validation set แล้ว shuffle
+valid_images = glob.glob('images/valid/*/*')
+shuffle(valid_images)
+
+if option == 'Use a validation image':
+    st.sidebar.write('### Select a validation image')
+    fname = st.sidebar.selectbox('', valid_images)
+
+else:
+    st.sidebar.write('### Select an image to upload')
+    fname = st.sidebar.file_uploader('',
+                                     type=['jpg'],
+                                     accept_multiple_files=False)
+    if fname is None:
+        fname = valid_images[0]
+    else:
+        # เปิดรูป
+        img = Image.open(fname).resize([224, 224])
+
+        # เรียก function ทำนาย
+        predict(img, learn_inf)
+
+##################################
+# main page
+##################################
+
+# ใส่ title ของ main page
+st.title("Dog Breed Classification")
