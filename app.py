@@ -11,7 +11,7 @@ import urllib.request
 import streamlit as st
 
 # โหลดโมเดลจากแหล่งข้อมูลในอินเตอร์เน็ตเพื่อประหยัดพื้นที่เวลา deploy บน heroku
-MODEL_URL = "https://github.com/cstorm125/choco-raisin/raw/main/notebooks/models/resnet34_finetune1e3_5p.pkl"
+MODEL_URL = 'https://github.com/PakinDioxide/Dog-Breed-Classification/blob/main/models/dbc_resnet50_new_fastai.pkl'
 urllib.request.urlretrieve(MODEL_URL, "model.pkl")
 learn_inf = load_learner('model.pkl', cpu=True)
 
@@ -24,7 +24,7 @@ learn_inf = load_learner('model.pkl', cpu=True)
 ##################################
 
 # ใส่ title ของ sidebar
-st.sidebar.write('### Enter cookie to classify')
+st.sidebar.write('### Enter a dog to classify')
 
 # radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image'])
