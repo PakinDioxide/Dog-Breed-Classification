@@ -64,7 +64,7 @@ def predict(img, learn):
     st.image(img, use_column_width=True)
 
 # เปิดรูป
-img = PILImage.create(fname)
+img = Image.open(fname)
 
 # เรียก function ทำนาย
 predict(img, learn_inf)
