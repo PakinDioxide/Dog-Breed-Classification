@@ -10,6 +10,7 @@ from PIL import Image
 import os
 import torch
 from torch import Tensor
+from pathlib import Path
 
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
