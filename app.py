@@ -65,7 +65,7 @@ def predict(img, learn):
     st.write(learn.predict(img))
     
     # โชว์รูปที่ถูกทำนาย
-    st.image(oriimg, use_column_width=True)
+    st.success(oriimg, use_column_width=True)
 
 # เปิดรูป
 # img = Image.open(fname)
