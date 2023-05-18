@@ -1,6 +1,5 @@
 #import library ที่ต้องใช้ทั้งหมด
 from fastai.vision.all import (
-    load_learner,
     PILImage,
 )
 import glob
@@ -11,6 +10,7 @@ import os
 import torch
 from torch import Tensor
 from pathlib import Path
+import fastbook
 
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
