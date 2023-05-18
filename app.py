@@ -44,7 +44,7 @@ else:
 
 # ใส่ title ของ main page
 st.title("Chocolate Chip vs Raisin Cookies")
-st.write(os.list_dir('/app/dog-breed-classification/'))
+st.write(os.listdir('/app/dog-breed-classification/'))
 
 #function การทำนาย
 def predict(img, learn):
