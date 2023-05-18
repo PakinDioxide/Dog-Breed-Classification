@@ -15,7 +15,7 @@ import streamlit as st
 # โหลดโมเดลจากแหล่งข้อมูลในอินเตอร์เน็ตเพื่อประหยัดพื้นที่เวลา deploy บน heroku
 MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
 urllib.request.urlretrieve(MODEL_URL)
-learn_inf = load_learner('dbc_resnet50_new_fastai.pkl', cpu=True)
+# learn_inf = load_learner('dbc_resnet50_new_fastai.pkl', cpu=True)
 
 # ใส่ title ของ sidebar
 st.sidebar.write('### Enter a dog image to classify')
