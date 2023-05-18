@@ -43,8 +43,8 @@ else:
                                      type=['png', 'jpg', 'jpeg'],
                                      accept_multiple_files=False)
     if not fname == None:
-        img = Image.open(fname)
-        img = img.resize([224, 224])
+        oriimg = Image.open(fname)
+        img = oriimg.resize([224, 224])
         st.image(img)
 
 ##################################
@@ -58,13 +58,13 @@ st.title("Chocolate Chip vs Raisin Cookies")
 def predict(img, learn):
 
     # ทำนายจากโมเดลที่ให้
-    pred, pred_idx, pred_prob = learn.predict(img)
+    pred = learn.predict(img)
 
     # โชว์ผลการทำนาย
-    st.success(f"This is {pred} cookie with the probability of {pred_prob[pred_idx]*100:.02f}%")
+    st.success(f"This is {pred} cookie with the probability of") # {pred_prob[pred_idx]*100:.02f}%")
     
     # โชว์รูปที่ถูกทำนาย
-    st.image(img, use_column_width=True)
+    st.image(oriimg, use_column_width=True)
 
 # เปิดรูป
 # img = Image.open(fname)
