@@ -1,3 +1,5 @@
+!pip install fastbook
+
 #import library ที่ต้องใช้ทั้งหมด
 from fastai.vision.all import (
     load_learner,
