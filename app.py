@@ -64,7 +64,7 @@ def predict(img, learn):
     st.image(img, use_column_width=True)
 
 # เปิดรูป
-img = Image.open(fname)
+# img = Image.open(fname)
 
-# เรียก function ทำนาย
-predict(img, learn_inf)
+# # เรียก function ทำนาย
+# predict(img, learn_inf)
