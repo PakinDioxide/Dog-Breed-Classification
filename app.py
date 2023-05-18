@@ -6,6 +6,7 @@ from fastai.vision.all import (
 import glob
 from random import shuffle
 import urllib.request
+from PIL import Image
 
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
@@ -38,11 +39,11 @@ if option == 'Use a validation image':
 
 else:
     st.sidebar.write('### Select an image to upload')
-    fname = st.sidebar.file_uploader('',
+    fname = st.sidebar.file_uploader('Select an image',
                                      type=['png', 'jpg', 'jpeg'],
                                      accept_multiple_files=False)
-    if fname is None:
-        fname = valid_images[0]
+    if not fname = None:
+        img = Image.open(fname)
 
 ##################################
 # main page
