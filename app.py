@@ -58,10 +58,11 @@ st.title("Chocolate Chip vs Raisin Cookies")
 def predict(img, learn):
 
     # ทำนายจากโมเดลที่ให้
-    pred = learn.predict(img)
+#     pred = learn.predict(img)
 
     # โชว์ผลการทำนาย
-    st.success(f"This is {pred} cookie with the probability of") # {pred_prob[pred_idx]*100:.02f}%")
+#     st.success(f"This is {pred} cookie with the probability of") # {pred_prob[pred_idx]*100:.02f}%")
+    st.write(learn.predict(img))
     
     # โชว์รูปที่ถูกทำนาย
     st.image(oriimg, use_column_width=True)
