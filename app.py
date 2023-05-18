@@ -7,6 +7,7 @@ import glob
 from random import shuffle
 import urllib.request
 from PIL import Image
+import os
 
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
@@ -43,6 +44,7 @@ else:
 
 # ใส่ title ของ main page
 st.title("Chocolate Chip vs Raisin Cookies")
+st.write(os.list_dir('/app/dog-breed-classification/'))
 
 #function การทำนาย
 def predict(img, learn):
