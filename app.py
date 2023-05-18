@@ -1,12 +1,12 @@
-import streamlit as st
-import pandas as pd
-from PIL import Image
-import urllib.request
-from fastbook import *
 from fastai.vision.all import (
     load_learner,
     PILImage,
 )
+import glob
+import streamlit as st
+from PIL import Image
+from random import shuffle
+import urllib.request
 
 uploaded_file = st.file_uploader("Choose a dog image to predict!", type=['png', 'jpg', 'jpeg'], accept_multiple_files=False)
 if uploaded_file is not None:
