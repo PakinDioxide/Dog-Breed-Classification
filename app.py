@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 from fastai.vision.all import *
-import pickle
+import torch
 
 # Load the model
 MODEL_URL = 'https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl'
@@ -12,8 +12,9 @@ model_file = path/'dbc_resnet50_new_fastai.pkl'
 if not model_file.exists():
     download_url(MODEL_URL, model_file)
 
-# Load the model using pickle
-learn_inf = pickle.load(open(model_file, 'rb'))
+# Load the model using torch.load
+learn_inf = torch.load(model_file, map_location=torch.device('cpu'))
+learn_inf.dls.device = torch.device('cpu')
 
 # Sidebar
 st.sidebar.title('Enter a dog to classify')
