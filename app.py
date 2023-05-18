@@ -8,7 +8,7 @@ from random import shuffle
 import urllib.request
 from PIL import Image
 import os
-from torch import _tensor
+from torch import *
 
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
