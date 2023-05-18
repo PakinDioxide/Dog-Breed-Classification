@@ -16,7 +16,7 @@ import pathlib
 temp = pathlib.PosixPath
 pathlib.PosixPath = pathlib.WindowsPath
 
-learn_inf = load_learner("C:\\Users\\young\\Documents\\GitHub\\Dog-Breed-Classification_2\\models\\dbc_resnet50_new_fastai.pkl")
+learn_inf = load_learner("/app/dog-breed-classification/dbc_resnet50_new_fastai.pkl")
 
 # เราจะแบ่งหน้าจอเป็น 
 # 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
