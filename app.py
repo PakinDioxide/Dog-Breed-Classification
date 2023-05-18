@@ -3,7 +3,6 @@ from fastai.vision.all import (
     load_learner,
     PILImage,
 )
-from fastbook import *
 import glob
 from random import shuffle
 import urllib.request
