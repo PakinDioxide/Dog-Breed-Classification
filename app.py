@@ -12,21 +12,9 @@ from PIL import Image
 import streamlit as st
 
 # โหลดโมเดลจากแหล่งข้อมูลในอินเตอร์เน็ตเพื่อประหยัดพื้นที่เวลา deploy บน heroku
-MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
-urllib.request.urlretrieve(MODEL_URL, "model.pkl")
-learn_inf = load_learner('model.pkl', cpu=True)
-
-#function การทำนาย
-def predict(img, learn):
-
-    # ทำนายจากโมเดลที่ให้
-    pred, pred_idx, pred_prob = learn.predict(img)
-
-    # โชว์ผลการทำนาย
-    st.success(f"This is {pred} with the probability of {pred_prob[pred_idx]*100:.02f}%")
-    
-    # โชว์รูปที่ถูกทำนาย
-    st.image(img, use_column_width=True)
+# MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
+# urllib.request.urlretrieve(MODEL_URL, "model.pkl")
+# learn_inf = load_learner('model.pkl', cpu=True)
 
 # ใส่ title ของ sidebar
 st.sidebar.write('### Enter a dog image to classify')
@@ -48,9 +36,6 @@ else:
                                      accept_multiple_files=False)
     if not fname == None:
         img = Image.open(fname).resize([224,224])
-        
-        # เรียก function ทำนาย
-        predict(img, learn_inf)
 
 ##################################
 # main page
@@ -58,3 +43,21 @@ else:
 
 # ใส่ title ของ main page
 st.title("Chocolate Chip vs Raisin Cookies")
+
+#function การทำนาย
+def predict(img, learn):
+
+    # ทำนายจากโมเดลที่ให้
+    pred, pred_idx, pred_prob = learn.predict(img)
+
+    # โชว์ผลการทำนาย
+    st.success(f"This is {pred} with the probability of {pred_prob[pred_idx]*100:.02f}%")
+    
+    # โชว์รูปที่ถูกทำนาย
+    st.image(img, use_column_width=True)
+
+# เปิดรูป
+img = PILImage.create(fname)
+
+# เรียก function ทำนาย
+predict(img, learn_inf)
