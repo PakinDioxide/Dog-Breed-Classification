@@ -82,7 +82,7 @@ else:
     else:
         # เปิดรูป
         img = Image.open(fname)
-        img = im.convert('RGB')
+        img = img.convert('RGB')
         img.save('fname.jpg')
         
         img = Image.open('fname.jpg')
