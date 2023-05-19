@@ -5,4 +5,3 @@ torchvision
 fastai>=2.3.1
 ipywidgets
 voila
-pillow==8.2.0
