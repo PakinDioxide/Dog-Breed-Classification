@@ -65,6 +65,18 @@ shuffle(valid_images)
 if option == 'Use a validation image':
     st.sidebar.write('### Select a validation image')
     fname = st.sidebar.selectbox('', valid_images)
+    
+    if fname is None:
+        st.sidebar.write("Please select an image...")
+    else:
+        # เปิดรูป
+        img = Image.open(fname)
+        
+        st.sidebar.image(img, 'Is this the image you want to predict?')
+
+        if st.sidebar.button("Predict Now!"):
+            # เรียก function ทำนาย
+            predict(img, learn_inf)
 
 else:
     st.sidebar.write('### Select an image to upload')
