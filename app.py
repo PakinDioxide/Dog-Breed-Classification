@@ -70,7 +70,11 @@ if option == 'Use a validation image':
         st.sidebar.write("Please select an image...")
     else:
         # เปิดรูป
-        img = Image.open(fname).save("fname.jpg")
+        img = Image.open(fname)
+        img = im.convert('RGB')
+        img.save('fname.jpg')
+        
+        img = Image.open('fname.jpg')
         
         st.sidebar.image(img, 'Is this the image you want to predict?')
 
