@@ -1,8 +1,7 @@
--f https://download.pytorch.org/whl/torch_stable.html
+fastbook
 streamlit
 torch
 torchvision
 fastai
 ipywidgets
-voila
 pillow
