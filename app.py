@@ -82,13 +82,13 @@ else:
     else:
         # เปิดรูป
         img = Image.open(fname)
+        # เป็น format ภาพ
         img = img.convert('RGB')
         img.save('fname.jpg')
         
         img = Image.open('fname.jpg')
         
         st.sidebar.image(img, 'Is this the image you want to predict?')
-        st.sidebar.write(f'Image format = {img.format}')
 
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
