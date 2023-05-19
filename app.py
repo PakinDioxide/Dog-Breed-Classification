@@ -19,11 +19,19 @@ pathlib.PosixPath = pathlib.WindowsPath
 
 MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
 urllib.request.urlretrieve(MODEL_URL, "model.pkl")
-learn_inf = load_learner('model.pkl', cpu=True)
+learn_inf = load_learner("model.pkl", cpu=True)
 
 # เราจะแบ่งหน้าจอเป็น 
 # 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
 # 2. main page ประกอบด้วยรูปและคำทำนาย
+
+##################################
+# main page
+##################################
+
+# ใส่ title ของ main page
+st.title("Dog Breed Classification")
+
 
 ##################################
 # sidebar
@@ -31,9 +39,11 @@ learn_inf = load_learner('model.pkl', cpu=True)
 
 #function การทำนาย
 def predict(img, learn):
-
+    # ย่อขนาดรูป
+    pimg = img.resize([224,224])
+    
     # ทำนายจากโมเดลที่ให้
-    pred, pred_idx, pred_prob = learn.predict(img)
+    pred, pred_idx, pred_prob = learn.predict(pimg)
     
     pred = ' '.join(pred.split('_')[1:])
 
@@ -44,7 +54,7 @@ def predict(img, learn):
     st.image(img, use_column_width=True)
 
 # ใส่ title ของ sidebar
-st.sidebar.write('### Enter cookie to classify')
+st.sidebar.write('### Enter dog to classify')
 
 # radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image'])
@@ -65,14 +75,10 @@ else:
         fname = valid_images[0]
     else:
         # เปิดรูป
-        img = Image.open(fname).resize([224, 224])
+        img = Image.open(fname)
+        
+        st.sidebar.image(img, 'Is this the image you want to predict?')
 
-        # เรียก function ทำนาย
-        predict(img, learn_inf)
-
-##################################
-# main page
-##################################
-
-# ใส่ title ของ main page
-st.title("Dog Breed Classification")
+        if st.sidebar.button("Predict Now!"):
+            # เรียก function ทำนาย
+            predict(img, learn_inf)
