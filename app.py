@@ -77,7 +77,7 @@ if option == 'Use a validation image':
         img = Image.open('fname.jpg')
         
         st.sidebar.image(img, 'Is this the image you want to predict?')
-        st.write(img.format)
+        st.sidebar.write(img.format)
 
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
