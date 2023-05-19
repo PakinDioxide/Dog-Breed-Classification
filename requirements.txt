@@ -1,3 +1,4 @@
+pip==23.1.2
 -f https://download.pytorch.org/whl/torch_stable.html
 streamlit
 torch
