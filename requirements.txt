@@ -1,7 +1,1 @@
 fastbook
-streamlit
-torch
-torchvision
-fastai
-ipywidgets
-pillow
