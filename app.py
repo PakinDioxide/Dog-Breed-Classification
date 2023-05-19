@@ -71,18 +71,7 @@ if option == 'Use a validation image':
     else:
         # เปิดรูป
         img = Image.open(fname)
-        img = im.convert('RGB')
-        img.save('fname.jpg')
         
-        img = Image.open('fname.jpg')
-        
-        st.sidebar.image(img, 'Is this the image you want to predict?')
-        st.sidebar.write(f'Image format = {img.format}')
-
-        if st.sidebar.button("Predict Now!"):
-            # เรียก function ทำนาย
-            predict(img, learn_inf)
-
 else:
     st.sidebar.write('### Select an image to upload')
     fname = st.sidebar.file_uploader('',
@@ -93,8 +82,13 @@ else:
     else:
         # เปิดรูป
         img = Image.open(fname)
+        img = im.convert('RGB')
+        img.save('fname.jpg')
+        
+        img = Image.open('fname.jpg')
         
         st.sidebar.image(img, 'Is this the image you want to predict?')
+        st.sidebar.write(f'Image format = {img.format}')
 
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
