@@ -72,7 +72,7 @@ else:
                                      type=['jpg'],
                                      accept_multiple_files=False)
     if fname is None:
-        fname = valid_images[0]
+        st.sidebar.write("Please select an image")
     else:
         # เปิดรูป
         img = Image.open(fname)
