@@ -1,6 +1,6 @@
 -f https://download.pytorch.org/whl/torch_stable.html
 streamlit
-torch==1.13.0+cpu
+torch==2.0.0+cpu
 torchvision
 fastai>=2.3.1
 ipywidgets
