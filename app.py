@@ -54,7 +54,7 @@ def predict(img, learn):
     st.image(img, use_column_width=True)
 
 # ใส่ title ของ sidebar
-st.sidebar.write('### Enter dog to classify')
+st.sidebar.write('### Upload a dog image to classify!')
 
 # radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image'])
@@ -72,7 +72,7 @@ else:
                                      type=['jpg'],
                                      accept_multiple_files=False)
     if fname is None:
-        st.sidebar.write("Please select an image")
+        st.sidebar.write("Please select an image...")
     else:
         # เปิดรูป
         img = Image.open(fname)
