@@ -1,9 +1,4 @@
-fastbook
--f https://download.pytorch.org/whl/torch_stable.html
+https://download.pytorch.org/whl/cpu/torch-1.8.1%2Bcpu-cp39-cp39-linux_x86_64.whl
+https://download.pytorch.org/whl/cpu/torchvision-0.9.1%2Bcpu-cp39-cp39-linux_x86_64.whl
+fastai==2.3.0
 streamlit
-torch
-torchvision
-fastai>=2.3.1
-ipywidgets
-voila
-pillow
