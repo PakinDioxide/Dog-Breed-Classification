@@ -93,7 +93,7 @@ elif option == 'Use your own image':
         
         img = Image.open('fname.jpg')
         
-        st.sidebar.image(img, 'Is this the image you want to predict?', use_column_width=True)
+        st.sidebar.image(img, f'Is this the image you want to predict?{img.size}', use_column_width=True)
 
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
