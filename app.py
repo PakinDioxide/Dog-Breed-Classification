@@ -57,7 +57,7 @@ def predict(img, learn):
 st.sidebar.write('# Upload a dog image to classify!')
 
 # radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
-option = st.sidebar.radio('', ['Use a validation image', 'Use your own image'])
+option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', 'Take a photo'])
 # โหลดรูปจาก validation set แล้ว shuffle
 valid_images = glob.glob('images/valid/*/*')
 shuffle(valid_images)
@@ -72,13 +72,31 @@ if option == 'Use a validation image':
         # เปิดรูป
         img = Image.open(fname)
         
-else:
+elif option == 'Use your own image':
     st.sidebar.write('### Select an image to upload')
     fname = st.sidebar.file_uploader('',
                                      type=['jpg', 'jpeg', 'png'],
                                      accept_multiple_files=False)
     if fname is None:
         st.sidebar.write("Please select an image...")
+    else:
+        # เปิดรูป
+        img = Image.open(fname)
+        # เป็น format ภาพ
+        img = img.convert('RGB')
+        img.save('fname.jpg')
+        
+        img = Image.open('fname.jpg')
+        
+        st.sidebar.image(img, 'Is this the image you want to predict?')
+
+        if st.sidebar.button("Predict Now!"):
+            # เรียก function ทำนาย
+            predict(img, learn_inf)
+ else:
+        fname = st.sidebar.camera_input('Take a photo of a dog')
+    if fname is None:
+        st.sidebar.write("Please take a photo...")
     else:
         # เปิดรูป
         img = Image.open(fname)
