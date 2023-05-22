@@ -51,7 +51,7 @@ def predict(img, learn):
     st.success(f'This is "{pred} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%')
     
     # โชว์รูปที่ถูกทำนาย
-    st.image(img, use_column_width=False)
+    st.image(img, use_column_width=True)
 
 # ใส่ title ของ sidebar
 st.sidebar.write('# Upload a dog image to classify!')
@@ -83,12 +83,12 @@ elif option == 'Use your own image':
         # เปิดรูป
         img = Image.open(fname)
         # เป็น format ภาพ
-        img = img.convert('RGB')
+#         img = img.convert('RGB')
         img.save('fname.jpg')
         
         img = Image.open('fname.jpg')
         
-        st.sidebar.image(img, 'Is this the image you want to predict?', use_column_width=False)
+        st.sidebar.image(img, 'Is this the image you want to predict?', use_column_width=True)
 
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
@@ -106,7 +106,7 @@ else:
 
             img = Image.open('fname.jpg')
 
-            st.sidebar.image(img, 'Is this the image you want to predict?', use_column_width=False)
+            st.sidebar.image(img, 'Is this the image you want to predict?', use_column_width=True)
 
             if st.sidebar.button("Predict Now!"):
                 # เรียก function ทำนาย
