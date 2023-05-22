@@ -70,7 +70,7 @@ if option == 'Use a validation image':
         st.sidebar.write("Please select an image...")
     else:
         # เปิดรูป
-        img = Image.open(fname, use_column_width=True)
+        img = Image.open(fname)
         
 elif option == 'Use your own image':
     st.sidebar.write('### Select an image to upload')
@@ -86,9 +86,9 @@ elif option == 'Use your own image':
         img = img.convert('RGB')
         img.save('fname.jpg')
         
-        img = Image.open('fname.jpg', use_column_width=True)
+        img = Image.open('fname.jpg')
         
-        st.sidebar.image(img, 'Is this the image you want to predict?')
+        st.sidebar.image(img, 'Is this the image you want to predict?', use_column_width=True)
 
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
@@ -104,9 +104,9 @@ else:
             img = img.convert('RGB')
             img.save('fname.jpg')
 
-            img = Image.open('fname.jpg', use_column_width=True)
+            img = Image.open('fname.jpg')
 
-            st.sidebar.image(img, 'Is this the image you want to predict?')
+            st.sidebar.image(img, 'Is this the image you want to predict?', use_column_width=True)
 
             if st.sidebar.button("Predict Now!"):
                 # เรียก function ทำนาย
