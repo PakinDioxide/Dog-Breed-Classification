@@ -95,19 +95,19 @@ elif option == 'Use your own image':
             predict(img, learn_inf)
  else:
         fname = st.sidebar.camera_input('Take a photo of a dog')
-    if fname is None:
-        st.sidebar.write("Please take a photo...")
-    else:
-        # เปิดรูป
-        img = Image.open(fname)
-        # เป็น format ภาพ
-        img = img.convert('RGB')
-        img.save('fname.jpg')
-        
-        img = Image.open('fname.jpg')
-        
-        st.sidebar.image(img, 'Is this the image you want to predict?')
+        if fname is None:
+            st.sidebar.write("Please take a photo...")
+        else:
+            # เปิดรูป
+            img = Image.open(fname)
+            # เป็น format ภาพ
+            img = img.convert('RGB')
+            img.save('fname.jpg')
 
-        if st.sidebar.button("Predict Now!"):
-            # เรียก function ทำนาย
-            predict(img, learn_inf)
+            img = Image.open('fname.jpg')
+
+            st.sidebar.image(img, 'Is this the image you want to predict?')
+
+            if st.sidebar.button("Predict Now!"):
+                # เรียก function ทำนาย
+                predict(img, learn_inf)
