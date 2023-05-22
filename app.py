@@ -57,6 +57,8 @@ def predict(img, learn):
     
     # โชว์รูปที่ถูกทำนาย
     st.image(img, use_column_width=True)
+    
+    st.balloons()
 
 # ใส่ title ของ sidebar
 st.sidebar.write('# Upload a dog image to classify!')
