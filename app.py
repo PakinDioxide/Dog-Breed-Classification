@@ -44,8 +44,13 @@ def predict(img, learn):
     
     # ทำนายจากโมเดลที่ให้
     pred, pred_idx, pred_prob = learn.predict(pimg)
+        
+    pred = pred.split('_')[1:]
     
-    pred = ' '.join(pred.split('_')[1:])
+    if pred[-1] == 'Dog':
+        pred = ' '.join(pred[:len(pred)]
+    else:
+        pred = ' '.join(pred)
 
     # โชว์ผลการทำนาย
     st.success(f'This is "{pred} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%')
@@ -82,8 +87,8 @@ elif option == 'Use your own image':
     else:
         # เปิดรูป
         img = Image.open(fname)
-        # เป็น format ภาพ
-#         img = img.convert('RGB')
+        # เปลี่ยน format ภาพ
+        img = img.convert('RGB')
         img.save('fname.jpg')
         
         img = Image.open('fname.jpg')
@@ -100,7 +105,7 @@ else:
         else:
             # เปิดรูป
             img = Image.open(fname)
-            # เป็น format ภาพ
+            # เปลี่ยน format ภาพ
             img = img.convert('RGB')
             img.save('fname.jpg')
 
