@@ -93,7 +93,7 @@ elif option == 'Use your own image':
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
             predict(img, learn_inf)
- else:
+else:
         fname = st.sidebar.camera_input('Take a photo of a dog')
         if fname is None:
             st.sidebar.write("Please take a photo...")
