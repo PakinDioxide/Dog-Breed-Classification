@@ -48,7 +48,7 @@ def predict(img, learn):
     pred = pred.split('_')[1:]
     
     if pred[-1] == 'Dog':
-        pred = ' '.join(pred[:len(pred)]
+        pred = ' '.join(pred[:len(pred)])
     else:
         pred = ' '.join(pred)
 
