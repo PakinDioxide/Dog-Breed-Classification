@@ -82,24 +82,18 @@ option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', '
 valid_images = glob.glob('/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/*/*')
 shuffle(valid_images)
 
-valid_images.insert(0, None)
-
 if option == 'Use a validation image':
     st.sidebar.write('### Select a validation image')
-    fname = None
+    fname = st.sidebar.selectbox('', valid_images)
     
-    if fname == None:
-        fname = st.sidebar.selectbox('', valid_images)
-        st.sidebar.write("Please select an image...")
-    else:
-        # เปิดรูป
-        img = Image.open(fname)
-        
-        st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
+    # เปิดรูป
+    img = Image.open(fname)
 
-        if st.sidebar.button("Predict Now!"):
-            # เรียก function ทำนาย
-            predict(img, learn_inf)
+    st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
+
+    if st.sidebar.button("Predict Now!"):
+        # เรียก function ทำนาย
+        predict(img, learn_inf)
         
 elif option == 'Use your own image':
     st.sidebar.write('### Select an image to upload')
