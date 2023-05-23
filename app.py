@@ -86,11 +86,15 @@ valid_images.insert(None, 0)
 
 if option == 'Use a validation image':
     st.sidebar.write('### Select a validation image')
-    fname = st.sidebar.selectbox('', valid_images)
     
-    if fname is None:
+    while(fname == None):
+        fname_temp = st.sidebar.selectbox('', valid_images)
+        fname = fname_temp
+    
+    if fname == None:
         st.sidebar.write("Please select an image...")
     else:
+        
         # เปิดรูป
         img = Image.open(fname)
         
