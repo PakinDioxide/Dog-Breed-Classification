@@ -6,3 +6,4 @@ torchvision
 fastai>=2.3.1
 ipywidgets
 voila
+GitPython
