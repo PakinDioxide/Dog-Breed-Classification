@@ -17,12 +17,12 @@ import streamlit as st
 # clone github repository
 if not os.path.exists('/app/dog-breed-classification/Dog-Breed-Classification'):
     os.mkdir('/app/dog-breed-classification/Dog-Breed-Classification')
-for root, dirs, files in os.walk('/app/dog-breed-classification/Dog-Breed-Classification'):
+for root, dirs, files in os.walk('/app/dog-breed-classification/Dog-Breed-Classification'): #เคลียร์ folder
     for f in files:
         os.unlink(os.path.join(root, f))
     for d in dirs:
         shutil.rmtree(os.path.join(root, d))
-# Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/Dog-Breed-Classification')
+Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/Dog-Breed-Classification')
 
 # import pathlib
 # temp = pathlib.PosixPath
