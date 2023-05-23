@@ -8,9 +8,13 @@ from random import shuffle
 import urllib.request
 from PIL import Image
 import os
+from git import Repo
 
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
+
+# clone github repository
+
 
 # import pathlib
 # temp = pathlib.PosixPath
@@ -20,6 +24,8 @@ import streamlit as st
 MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
 urllib.request.urlretrieve(MODEL_URL, "model.pkl")
 learn_inf = load_learner("model.pkl", cpu=True)
+
+st.write(os.listdir('/app/dog-breed-classification/')
 
 # เราจะแบ่งหน้าจอเป็น 
 # 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
