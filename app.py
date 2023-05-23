@@ -85,6 +85,7 @@ for i in range(len(valid_images)):
     k = str(valid_images[i])
     k.replace('/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/', '')
     valid_images[i] = k
+    st.write(k)
 
 if option == 'Use a validation image':
     st.sidebar.write('### Select a validation image')
