@@ -72,6 +72,8 @@ def predict(img, learn):
     st.image(img, use_column_width=True)
     
     st.balloons()
+    
+    shuffle(valid_images)
 
 # ใส่ title ของ sidebar
 st.sidebar.write('# Upload a dog image to classify!')
