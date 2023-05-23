@@ -82,7 +82,7 @@ option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', '
 valid_images = glob.glob('/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/*/*')
 shuffle(valid_images)
 
-valid_images.insert(None, 0)
+valid_images.insert(0, None)
 
 if option == 'Use a validation image':
     st.sidebar.write('### Select a validation image')
