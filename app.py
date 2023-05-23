@@ -14,7 +14,7 @@ from git import Repo
 import streamlit as st
 
 # clone github repository
-
+Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/')
 
 # import pathlib
 # temp = pathlib.PosixPath
@@ -35,8 +35,6 @@ learn_inf = load_learner("model.pkl", cpu=True)
 
 # ใส่ title ของ main page
 st.title("Dog Breed Classification")
-
-st.write(os.listdir('/app/dog-breed-classification/'))
 
 ##################################
 # sidebar
