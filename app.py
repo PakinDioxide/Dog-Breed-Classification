@@ -79,12 +79,10 @@ st.sidebar.write('# Upload a dog image to classify!')
 # radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', 'Take a photo'])
 # โหลดรูปจาก validation set แล้ว shuffle
-image_list = [None]
 valid_images = glob.glob('/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/*/*')
 shuffle(valid_images)
 
-for i in valid_images:
-    image_list.append(i)
+valid_images.insert(None, 0)
 
 if option == 'Use a validation image':
     st.sidebar.write('### Select a validation image')
