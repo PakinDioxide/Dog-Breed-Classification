@@ -25,8 +25,6 @@ MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/m
 urllib.request.urlretrieve(MODEL_URL, "model.pkl")
 learn_inf = load_learner("model.pkl", cpu=True)
 
-st.write(os.listdir('/app/dog-breed-classification/')
-
 # เราจะแบ่งหน้าจอเป็น 
 # 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
 # 2. main page ประกอบด้วยรูปและคำทำนาย
@@ -38,6 +36,7 @@ st.write(os.listdir('/app/dog-breed-classification/')
 # ใส่ title ของ main page
 st.title("Dog Breed Classification")
 
+st.write(os.listdir('/app/dog-breed-classification/')
 
 ##################################
 # sidebar
