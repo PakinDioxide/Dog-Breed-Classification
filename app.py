@@ -22,7 +22,7 @@ for root, dirs, files in os.walk('/app/dog-breed-classification/Dog-Breed-Classi
         os.unlink(os.path.join(root, f))
     for d in dirs:
         shutil.rmtree(os.path.join(root, d))
-Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git-Images', '/app/dog-breed-classification/Dog-Breed-Classification-Images')
+Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification-Images.git', '/app/dog-breed-classification/Dog-Breed-Classification-Images')
 
 # import pathlib
 # temp = pathlib.PosixPath
