@@ -16,7 +16,7 @@ import streamlit as st
 # clone github repository
 if not os.path.exists('/app/dog-breed-classification/Dog-Breed-Classification'):
     os.mkdir('/app/dog-breed-classification/Dog-Breed-Classification')
-Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/Dog-Breed-Classification')
+# Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/Dog-Breed-Classification')
 
 # import pathlib
 # temp = pathlib.PosixPath
@@ -37,6 +37,7 @@ learn_inf = load_learner("model.pkl", cpu=True)
 
 # ใส่ title ของ main page
 st.title("Dog Breed Classification")
+st.write('/app/dog-breed-classification/Dog-Breed-Classification')
 
 ##################################
 # sidebar
