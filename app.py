@@ -91,6 +91,17 @@ if option == 'Use a validation image':
     else:
         # เปิดรูป
         img = Image.open(fname)
+        # เปลี่ยน format ภาพ
+        img = img.convert('RGB')
+        img.save('fname.jpg')
+        
+        img = Image.open('fname.jpg')
+        
+        st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
+
+        if st.sidebar.button("Predict Now!"):
+            # เรียก function ทำนาย
+            predict(img, learn_inf)
         
 elif option == 'Use your own image':
     st.sidebar.write('### Select an image to upload')
