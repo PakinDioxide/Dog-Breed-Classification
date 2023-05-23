@@ -88,7 +88,7 @@ for i in valid_images:
 
 if option == 'Use a validation image':
     st.sidebar.write('### Select a validation image')
-    fname = st.sidebar.selectbox('', valid_images)
+    fname = st.sidebar.selectbox('', image_list)
     
     if fname is None:
         st.sidebar.write("Please select an image...")
