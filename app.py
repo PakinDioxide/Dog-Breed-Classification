@@ -91,11 +91,6 @@ if option == 'Use a validation image':
     else:
         # เปิดรูป
         img = Image.open(fname)
-        # เปลี่ยน format ภาพ
-        img = img.convert('RGB')
-        img.save('fname.jpg')
-        
-        img = Image.open('fname.jpg')
         
         st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
 
