@@ -16,6 +16,9 @@ import streamlit as st
 # clone github repository
 if not os.path.exists('/app/dog-breed-classification/Dog-Breed-Classification'):
     os.mkdir('/app/dog-breed-classification/Dog-Breed-Classification')
+files = glob.glob('/app/dog-breed-classification/Dog-Breed-Classification/*')
+for f in files:
+    os.remove(f)
 # Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/Dog-Breed-Classification')
 
 # import pathlib
