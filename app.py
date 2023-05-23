@@ -72,6 +72,8 @@ def predict(img, learn):
     st.image(img, use_column_width=True)
     
     st.balloons()
+    
+    shuffle(valid_images)
 
 # ใส่ title ของ sidebar
 st.sidebar.write('# Upload a dog image to classify!')
@@ -80,7 +82,6 @@ st.sidebar.write('# Upload a dog image to classify!')
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', 'Take a photo'])
 # โหลดรูปจาก validation set แล้ว shuffle
 valid_images = glob.glob('/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/*/*')
-shuffle(valid_images)
 
 if option == 'Use a validation image':
     st.sidebar.write('### Select a validation image')
