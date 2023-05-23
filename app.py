@@ -14,7 +14,8 @@ from git import Repo
 import streamlit as st
 
 # clone github repository
-Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/')
+os.mkdir('/app/dog-breed-classification/Dog-Breed-Classification')
+Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/Dog-Breed-Classification')
 
 # import pathlib
 # temp = pathlib.PosixPath
