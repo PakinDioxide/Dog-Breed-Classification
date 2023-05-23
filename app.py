@@ -44,7 +44,7 @@ learn_inf = load_learner("model.pkl", cpu=True)
 
 # ใส่ title ของ main page
 st.title("Dog Breed Classification")
-st.write(os.listdir('/app/dog-breed-classification/Dog-Breed-Classification-Images'))
+# st.write(os.listdir('/app/dog-breed-classification/Dog-Breed-Classification-Images'))
 
 ##################################
 # sidebar
