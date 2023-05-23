@@ -91,7 +91,7 @@ if option == 'Use a validation image':
     fname = st.sidebar.selectbox('', valid_images)
     
     # เปิดรูป
-    img = Image.open(fname)
+    img = Image.open(f'/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/{fname}')
 
     st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
 
