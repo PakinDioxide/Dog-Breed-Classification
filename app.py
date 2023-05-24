@@ -80,7 +80,7 @@ st.sidebar.write('# Upload a dog image to classify!')
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', 'Take a photo'])
 # โหลดรูปจาก validation set แล้ว shuffle
 valid_images = glob.glob('/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/*/*')
-sort(valid_images)
+valid_images.sort()
 for i in range(len(valid_images)):
     k = str(valid_images[i])
     k =k.replace('/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/', '')
