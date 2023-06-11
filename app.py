@@ -23,16 +23,16 @@ if not os.path.exists('/app/dog-breed-classification/Dog-Breed-Classification-Im
             os.unlink(os.path.join(root, f))
         for d in dirs:
             shutil.rmtree(os.path.join(root, d))
-    Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification-Images.git', '/app/dog-breed-classification/Dog-Breed-Classification-Images')
+    Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/dog-breed-classification/Dog-Breed-Classification-Images')
 
 # import pathlib
 # temp = pathlib.PosixPath
 # pathlib.PosixPath = pathlib.WindowsPath
 
 
-MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
-urllib.request.urlretrieve(MODEL_URL, "model.pkl")
-learn_inf = load_learner("model.pkl", cpu=True)
+# MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
+# urllib.request.urlretrieve(MODEL_URL, "model.pkl")
+learn_inf = load_learner('/app/dog-breed-classification/Dog-Breed-Classification-Images/models/dbc_resnet50_new_fastai.pkl', cpu=True)
 
 # เราจะแบ่งหน้าจอเป็น 
 # 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
