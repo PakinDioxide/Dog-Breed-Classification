@@ -15,7 +15,7 @@ import shutil
 import streamlit as st
 
 # clone github repository
-if not os.path.exists('/app/dog-breed-classification/Dog-Breed-Classification-Images/images/test/099_Siberian_Husky/n02110185_120.jpg'):
+if not os.path.exists('/app/dog-breed-classification/Dog-Breed-Classification-Images/models/dbc_resnet50_new_fastai.pkl'):
     if not os.path.exists('/app/dog-breed-classification/Dog-Breed-Classification-Images'):
         os.mkdir('/app/dog-breed-classification/Dog-Breed-Classification-Images')
     for root, dirs, files in os.walk('/app/dog-breed-classification/Dog-Breed-Classification-Images'): #เคลียร์ folder
