@@ -15,21 +15,13 @@ import shutil
 import streamlit as st
 
 # clone github repository
-if not os.path.exists('/app/models/dbc_resnet50_new_fastai.pkl'):
-    for root, dirs, files in os.walk('/app'): #เคลียร์ folder
-        for f in files:
-            os.unlink(os.path.join(root, f))
-        for d in dirs:
-            shutil.rmtree(os.path.join(root, d))
+if (not os.path.exists('/app/models/dbc_resnet50_new_fastai.pkl')) or (not os.path.exists('/app/images')):
     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/')
 
 # import pathlib
 # temp = pathlib.PosixPath
 # pathlib.PosixPath = pathlib.WindowsPath
 
-
-# MODEL_URL = "https://github.com/PakinDioxide/Dog-Breed-Classification/raw/main/models/dbc_resnet50_new_fastai.pkl"
-# urllib.request.urlretrieve(MODEL_URL, "model.pkl")
 learn_inf = load_learner('/app/models/dbc_resnet50_new_fastai.pkl', cpu=True)
 
 # เราจะแบ่งหน้าจอเป็น 
@@ -42,7 +34,6 @@ learn_inf = load_learner('/app/models/dbc_resnet50_new_fastai.pkl', cpu=True)
 
 # ใส่ title ของ main page
 st.title("Dog Breed Classification")
-# st.write(os.listdir('/app/dog-breed-classification/Dog-Breed-Classification-Images'))
 
 ##################################
 # sidebar
