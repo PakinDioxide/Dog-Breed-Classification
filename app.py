@@ -18,9 +18,11 @@ import streamlit as st
 if (not os.path.exists('/app/models/dbc_resnet50_new_fastai.pkl')):
     for root, dirs, files in os.walk('/app'):
         for f in files:
-            os.unlink(os.path.join(root, f))
+            if not f.endswith('.log'):
+                os.unlink(os.path.join(root, f))
         for d in dirs:
-            shutil.rmtree(os.path.join(root, d))
+            if not d.startswith('exclude_dir'):
+                shutil.rmtree(os.path.join(root, d))
     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app')
 
 # import pathlib
