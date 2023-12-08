@@ -18,11 +18,15 @@ import streamlit as st
 if (not os.path.exists('/app/models/dbc_resnet50_new_fastai.pkl')):
     for root, dirs, files in os.walk('/app'):
         for f in files:
-            if not f.endswith('.log'):
+            try:
                 os.unlink(os.path.join(root, f))
+            except PermissionError as e:
+                print(f"PermissionError: {e}")
         for d in dirs:
-            if not d.startswith('exclude_dir'):
+            try:
                 shutil.rmtree(os.path.join(root, d))
+            except PermissionError as e:
+                print(f"PermissionError: {e}")
     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app')
 
 # import pathlib
