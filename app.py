@@ -15,8 +15,8 @@ import shutil
 import streamlit as st
 
 # clone github repository
-if (not os.path.exists('/app/models/dbc_resnet50_new_fastai.pkl')) or (not os.path.exists('/app/images')):
-    Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/')
+if (not os.path.exists('/app/models/dbc_resnet50_new_fastai.pkl')):
+    Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app')
 
 # import pathlib
 # temp = pathlib.PosixPath
