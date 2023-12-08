@@ -14,19 +14,15 @@ import shutil
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
 
-# clone github repository
-if (not os.path.exists('/app/repo/models/dbc_resnet50_new_fastai.pkl')):
-    for root, dirs, files in os.walk('/app/repo'):
-        for f in files:
-            os.unlink(os.path.join(root, f))
-        for d in dirs:
-            shutil.rmtree(os.path.join(root, d))
-    os.makedirs('/app/repo');
-    Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/repo')
-
-# import pathlib
-# temp = pathlib.PosixPath
-# pathlib.PosixPath = pathlib.WindowsPath
+# # clone github repository
+# if (not os.path.exists('/app/repo/models/dbc_resnet50_new_fastai.pkl')):
+#     for root, dirs, files in os.walk('/app/repo'):
+#         for f in files:
+#             os.unlink(os.path.join(root, f))
+#         for d in dirs:
+#             shutil.rmtree(os.path.join(root, d))
+#     os.makedirs('/app/repo');
+#     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/repo')
 
 learn_inf = load_learner('/app/repo/models/dbc_resnet50_new_fastai.pkl', cpu=True)
 
