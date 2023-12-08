@@ -70,11 +70,11 @@ st.sidebar.write('# Upload a dog image to classify!')
 # radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', 'Take a photo'])
 # โหลดรูปจาก validation set แล้ว shuffle
-valid_images = glob.glob('/app/repo/images/test/*/*')
+valid_images = glob.glob('/app/images/test/*/*')
 valid_images.sort()
 for i in range(len(valid_images)):
     k = str(valid_images[i])
-    k =k.replace('/app/repo/images/test/', '')
+    k =k.replace('/app/images/test/', '')
     valid_images[i] = k
 
 if option == 'Use a validation image':
@@ -82,7 +82,7 @@ if option == 'Use a validation image':
     fname = st.sidebar.selectbox('', valid_images)
     
     # เปิดรูป
-    img = Image.open(f'/app/repo/images/test/{fname}')
+    img = Image.open(f'/app/images/test/{fname}')
 
     st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
 
