@@ -14,7 +14,7 @@ import shutil
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
 
-st.success(os.lisdir('/app'))
+st.success(os.listdir())
 
 # # clone github repository
 # if not os.path.exists('/app/dog-breed-classification/Dog-Breed-Classification-Images/models/dbc_resnet50_new_fastai.pkl'):
