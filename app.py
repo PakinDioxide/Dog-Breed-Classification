@@ -21,7 +21,7 @@ if (not os.path.exists('/app/repo/models/dbc_resnet50_new_fastai.pkl')):
             os.unlink(os.path.join(root, f))
         for d in dirs:
             shutil.rmtree(os.path.join(root, d))
-    os.mkdir('/app/repo');
+    os.makedirs('/app/repo');
     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/repo')
 
 # import pathlib
