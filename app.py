@@ -15,7 +15,7 @@ import shutil
 import streamlit as st
 
 st.success(os.listdir('/'))
-st.success(os.listdir('/srv'))
+st.success(os.listdir('/usr'))
 
 # # clone github repository
 # if (not os.path.exists('/app/repo/models/dbc_resnet50_new_fastai.pkl')):
