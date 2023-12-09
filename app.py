@@ -14,7 +14,8 @@ import shutil
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
 
-st.success(os.listdir('/app'))
+st.success(os.listdir('/'))
+st.success(os.listdir('/srv'))
 
 # # clone github repository
 # if (not os.path.exists('/app/repo/models/dbc_resnet50_new_fastai.pkl')):
