@@ -26,7 +26,7 @@ st.success(os.listdir())
 #     os.makedirs('/app/repo');
 #     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/repo')
 
-# learn_inf = load_learner('/app/models/dbc_resnet50_new_fastai.pkl', cpu=True)
+learn_inf = load_learner('/app/models/dbc_resnet50_new_fastai.pkl', cpu=True)
 
 # # เราจะแบ่งหน้าจอเป็น 
 # # 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
