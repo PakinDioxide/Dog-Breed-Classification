@@ -18,7 +18,7 @@ for i in os.listdir('/'):
     try:
         for j in os.listdir(f'/{i}'):
             st.write(f'/{i}/{j}')
-    except PermissionError as e:
+    except:
         st.write('Error')
 
 # # clone github repository
