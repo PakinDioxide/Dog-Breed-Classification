@@ -14,12 +14,12 @@ import shutil
 #import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
 import streamlit as st
 
-for i in os.listdir('/'):
-    try:
-        for j in os.listdir(f'/{i}'):
-            st.write(f'/{i}/{j}')
-    except:
-        st.write('Error')
+# for i in os.listdir('/'):
+#     try:
+#         for j in os.listdir(f'/{i}'):
+#             st.write(f'/{i}/{j}')
+#     except:
+#         st.write('Error')
 
 # # clone github repository
 # if (not os.path.exists('/app/repo/models/dbc_resnet50_new_fastai.pkl')):
@@ -31,7 +31,7 @@ for i in os.listdir('/'):
 #     os.makedirs('/app/repo');
 #     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/repo')
 
-learn_inf = load_learner('/models/dbc_resnet50_new_fastai.pkl', cpu=True)
+learn_inf = load_learner('/mount/src/dog-breed-classification/models/dbc_resnet50_new_fastai.pkl', cpu=True)
 
 # เราจะแบ่งหน้าจอเป็น 
 # 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
@@ -77,11 +77,11 @@ st.sidebar.write('# Upload a dog image to classify!')
 # radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', 'Take a photo'])
 # โหลดรูปจาก validation set แล้ว shuffle
-valid_images = glob.glob('/images/test/*/*')
+valid_images = glob.glob('/mount/src/dog-breed-classification/images/test/*/*')
 valid_images.sort()
 for i in range(len(valid_images)):
     k = str(valid_images[i])
-    k =k.replace('/images/test/', '')
+    k =k.replace('/mount/src/dog-breed-classification/images/test/', '')
     valid_images[i] = k
 
 if option == 'Use a validation image':
@@ -89,7 +89,7 @@ if option == 'Use a validation image':
     fname = st.sidebar.selectbox('', valid_images)
     
     # เปิดรูป
-    img = Image.open(f'/images/test/{fname}')
+    img = Image.open(f'/mount/src/dog-breed-classification/images/test/{fname}')
 
     st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
 
