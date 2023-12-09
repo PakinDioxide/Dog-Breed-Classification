@@ -15,8 +15,11 @@ import shutil
 import streamlit as st
 
 for i in os.listdir('/'):
-    for j in os.listdir(f'/{i}'):
-        st.write(f'/{i}/{j}')
+    try:
+        for j in os.listdir(f'/{i}'):
+            st.write(f'/{i}/{j}')
+    except PermissionError as e:
+        st.write('Error')
 
 # # clone github repository
 # if (not os.path.exists('/app/repo/models/dbc_resnet50_new_fastai.pkl')):
