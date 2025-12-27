@@ -67,7 +67,7 @@ def predict(img, learn):
     st.success(f'This is "{pred} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%')
     
     # โชว์รูปที่ถูกทำนาย
-    st.image(img, use_column_width=True)
+    st.image(img, use_container_width=True)
     
     st.balloons()
 
@@ -76,6 +76,11 @@ st.sidebar.write('# Upload a dog image to classify!')
 
 # radio button สำหรับเลือกว่าจะทำนายรูปจาก validation set หรือ upload รูปเอง
 option = st.sidebar.radio('', ['Use a validation image', 'Use your own image', 'Take a photo'])
+
+# Rotation
+if 'rotation' not in st.session_state:
+    st.session_state.rotation = 0
+
 # โหลดรูปจาก validation set แล้ว shuffle
 valid_images = glob.glob('/mount/src/dog-breed-classification/images/test/*/*')
 valid_images.sort()
@@ -90,9 +95,13 @@ if option == 'Use a validation image':
     
     # เปิดรูป
     img = Image.open(f'/mount/src/dog-breed-classification/images/test/{fname}')
+    img = img.rotate(st.session_state.rotation, expand=True)
 
-    st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
+    st.sidebar.image(img, f'Is this the image you want to predict?', use_container_width=True)
 
+    if st.sidebar.button("Rotate Image"):
+        st.session_state.rotation = (st.session_state.rotation - 90) % 360
+    
     if st.sidebar.button("Predict Now!"):
         # เรียก function ทำนาย
         predict(img, learn_inf)
@@ -112,9 +121,13 @@ elif option == 'Use your own image':
         img.save('fname.jpg')
         
         img = Image.open('fname.jpg')
+        img = img.rotate(st.session_state.rotation, expand=True)
         
-        st.sidebar.image(img, f'Is this the image you want to predict?', use_column_width=True)
+        st.sidebar.image(img, f'Is this the image you want to predict?', use_container_width=True)
 
+        if st.sidebar.button("Rotate Image"):
+            st.session_state.rotation = (st.session_state.rotation - 90) % 360
+        
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
             predict(img, learn_inf)
@@ -130,9 +143,13 @@ else:
             img.save('fname.jpg')
 
             img = Image.open('fname.jpg')
+            img = img.rotate(st.session_state.rotation, expand=True)
 
-            st.sidebar.image(img, 'Is this the image you want to predict?', use_column_width=True)
+            st.sidebar.image(img, 'Is this the image you want to predict?', use_container_width=True)
 
+            if st.sidebar.button("Rotate Image"):
+                st.session_state.rotation = (st.session_state.rotation - 90) % 360
+            
             if st.sidebar.button("Predict Now!"):
                 # เรียก function ทำนาย
                 predict(img, learn_inf)
