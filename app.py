@@ -101,6 +101,7 @@ if option == 'Use a validation image':
 
     if st.sidebar.button("Rotate Image"):
         st.session_state.rotation = (st.session_state.rotation - 90) % 360
+        st.rerun()
     
     if st.sidebar.button("Predict Now!"):
         # เรียก function ทำนาย
@@ -127,6 +128,7 @@ elif option == 'Use your own image':
 
         if st.sidebar.button("Rotate Image"):
             st.session_state.rotation = (st.session_state.rotation - 90) % 360
+            st.rerun()
         
         if st.sidebar.button("Predict Now!"):
             # เรียก function ทำนาย
@@ -149,7 +151,9 @@ else:
 
             if st.sidebar.button("Rotate Image"):
                 st.session_state.rotation = (st.session_state.rotation - 90) % 360
+                st.rerun()
             
             if st.sidebar.button("Predict Now!"):
                 # เรียก function ทำนาย
                 predict(img, learn_inf)
+
