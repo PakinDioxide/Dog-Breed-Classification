@@ -49,26 +49,27 @@ st.title("Dog Breed Classification")
 ##################################
 
 #function การทำนาย
+from fastai.vision.all import PILImage
+
 def predict(img, learn):
-    # ย่อขนาดรูป
-    pimg = PILImage.create(img).resize((224,224))
-    
-    # ทำนายจากโมเดลที่ให้
+    # บังคับให้เป็น RGB เสมอ (สำคัญมาก)
+    img = img.convert("RGB")
+
+    # ห้าม resize / rotate ก่อนส่งเข้า fastai
+    pimg = PILImage.create(img)
+
     pred, pred_idx, pred_prob = learn.predict(pimg)
-        
+
     pred = pred.split('_')[1:]
-    
     if pred[-1] == 'Dog':
-        pred = ' '.join(pred[:len(pred)-1])
+        pred = ' '.join(pred[:-1])
     else:
         pred = ' '.join(pred)
 
-    # โชว์ผลการทำนาย
-    st.success(f'This is "{pred} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%')
-    
-    # โชว์รูปที่ถูกทำนาย
+    st.success(
+        f'This is "{pred} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%'
+    )
     st.image(img, use_container_width=True)
-    
     st.balloons()
 
 # ใส่ title ของ sidebar
