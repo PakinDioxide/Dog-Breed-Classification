@@ -1,9 +1,11 @@
 pip==23.1.2
 -f https://download.pytorch.org/whl/torch_stable.html
+
+torch==1.13.1
+torchvision==0.14.1
+fastai==2.7.12
+
 streamlit
-torch
-torchvision
-fastai<2.8.0
 ipywidgets
 voila
 GitPython
