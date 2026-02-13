@@ -51,7 +51,7 @@ st.title("Dog Breed Classification")
 #function การทำนาย
 def predict(img, learn):
     # ย่อขนาดรูป
-    pimg = img.resize([224,224])
+    pimg = PILImage.create(img).resize((224,224))
     
     # ทำนายจากโมเดลที่ให้
     pred, pred_idx, pred_prob = learn.predict(pimg)
