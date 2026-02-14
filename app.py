@@ -1,59 +1,29 @@
-#import library ที่ต้องใช้ทั้งหมด
-from fastai.vision.all import (
-    load_learner,
-    PILImage,
-)
-import glob
-from random import shuffle
-import urllib.request
-from PIL import Image
-import os
-from git import Repo
-import shutil
-
-#import streamlit มาในชื่อ st เพื่อใช้ในการสร้าง user interface
-import streamlit as st
-
-# for i in os.listdir('/'):
-#     try:
-#         for j in os.listdir(f'/{i}'):
-#             st.write(f'/{i}/{j}')
-#     except:
-#         st.write('Error')
-
-# # clone github repository
-# if (not os.path.exists('/app/repo/models/dbc_resnet50_new_fastai.pkl')):
-#     for root, dirs, files in os.walk('/app/repo'):
-#         for f in files:
-#             os.unlink(os.path.join(root, f))
-#         for d in dirs:
-#             shutil.rmtree(os.path.join(root, d))
-#     os.makedirs('/app/repo');
-#     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/repo')
-
 import streamlit as st
 import sys
-import types
-from fastai.vision.all import *
+import os
 import glob
 from PIL import Image
-import os
 
-# --- CRITICAL FIX FOR 2023 MODELS ---
-# This "tricks" the model into finding the moved 'Pipeline' class
-if 'fasttransform' not in sys.modules:
-    # Create a fake fastcore.transform module if it's missing the old paths
+# --- 1. CRITICAL FIX FOR 2023 MODELS (The Bridge) ---
+# This MUST happen before 'from fastai...' to prevent ImportErrors
+try:
     import fastcore.transform
+    import fasttransform
     if not hasattr(fastcore.transform, 'Pipeline'):
-        import fasttransform
-        sys.modules['fastcore.transform'].Pipeline = fasttransform.Pipeline
-        sys.modules['fastcore.transform'].Transform = fasttransform.Transform
+        fastcore.transform.Pipeline = fasttransform.Pipeline
+        fastcore.transform.Transform = fasttransform.Transform
+except ImportError:
+    st.error("Missing dependencies. Please ensure 'fasttransform' and 'ipython' are in requirements.txt")
 
-# Function to safely load the learner
+# --- 2. NOW IMPORT FASTAI ---
+from fastai.vision.all import *
+
+# --- 3. MODEL LOADING WITH CACHING ---
 @st.cache_resource
 def get_model():
+    # Streamlit Cloud default path
     model_path = '/mount/src/dog-breed-classification/models/dbc_resnet50_new_fastai.pkl'
-    # Fallback for local testing
+    # Local development fallback
     if not os.path.exists(model_path):
         model_path = 'models/dbc_resnet50_new_fastai.pkl'
     
@@ -61,47 +31,29 @@ def get_model():
 
 learn_inf = get_model()
 
-# Old
-# learn_inf = load_learner('/mount/src/dog-breed-classification/models/dbc_resnet50_new_fastai.pkl', cpu=True)
-
-# เราจะแบ่งหน้าจอเป็น 
-# 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
-# 2. main page ประกอบด้วยรูปและคำทำนาย
-
-##################################
-# main page
-##################################
-
-# ใส่ title ของ main page
-st.title("Dog Breed Classification")
-
-##################################
-# sidebar
-##################################
-
-#function การทำนาย
-from fastai.vision.all import PILImage
-
+# --- 4. PREDICTION LOGIC ---
 def predict(img, learn):
-    # บังคับให้เป็น RGB เสมอ (สำคัญมาก)
+    # Ensure image is RGB
     img = img.convert("RGB")
-
-    # ห้าม resize / rotate ก่อนส่งเข้า fastai
     pimg = PILImage.create(img)
 
     pred, pred_idx, pred_prob = learn.predict(pimg)
 
-    pred = pred.split('_')[1:]
-    if pred[-1] == 'Dog':
-        pred = ' '.join(pred[:-1])
+    # Label processing
+    pred_name = pred.split('_')[1:]
+    if pred_name[-1] == 'Dog':
+        display_name = ' '.join(pred_name[:-1])
     else:
-        pred = ' '.join(pred)
+        display_name = ' '.join(pred_name)
 
     st.success(
-        f'This is "{pred} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%'
+        f'This is "{display_name} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%'
     )
     st.image(img, use_container_width=True)
     st.balloons()
+
+# ใส่ title ของ main page
+st.title("Dog Breed Classification")
 
 # ใส่ title ของ sidebar
 st.sidebar.write('# Upload a dog image to classify!')
