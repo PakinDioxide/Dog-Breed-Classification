@@ -38,34 +38,28 @@ CLASSES = [
 # 2. MODEL LOADING (RECONSTRUCT ARCHITECTURE)
 @st.cache_resource
 def load_weights_only_model():
-    # 1. Reconstruct the standard ResNet50 architecture
     model = models.resnet50()
     
-    # --- THE ARCHITECTURE FIX ---
-    # Your weights expect a two-layer head: 2048 -> 512 -> 120
-    # We replace model.fc with a Sequential block to match the [120, 512] shape
-    num_ftrs = model.fc.in_features # This is 2048
+    # --- THE CONCAT POOLING FIX ---
+    # FastAI uses Concat Pooling, which doubles the features (2048 * 2 = 4096)
     model.fc = nn.Sequential(
-        nn.Linear(num_ftrs, 512),
+        nn.Linear(4096, 512), # Change 2048 to 4096 here
         nn.ReLU(inplace=True),
         nn.Linear(512, len(CLASSES))
     )
     # -----------------------------
     
-    # 2. Path handling
     weight_path = 'models/resnet50_weights.pth'
     if not os.path.exists(weight_path):
         weight_path = '/mount/src/dog-breed-classification/models/resnet50_weights.pth'
     
     state_dict = torch.load(weight_path, map_location=torch.device('cpu'))
     
-    # 3. THE CLEANING LOGIC
     new_state_dict = {}
     for key, value in state_dict.items():
         if key.startswith("0."):
             new_key = key.replace("0.", "", 1)
             new_state_dict[new_key] = value
-        # Now we map the FastAI head (1.x) to our new model.fc Sequential block
         elif "1.4.weight" in key:
             new_state_dict["fc.0.weight"] = value
         elif "1.4.bias" in key:
@@ -75,7 +69,6 @@ def load_weights_only_model():
         elif "1.8.bias" in key:
             new_state_dict["fc.2.bias"] = value
 
-    # 4. Load weights
     model.load_state_dict(new_state_dict, strict=False)
     model.eval()
     return model
@@ -194,3 +187,4 @@ else:
             if st.sidebar.button("Predict Now!"):
                 # เรียก function ทำนาย
                 predict(img, learn_inf)
+
