@@ -31,7 +31,38 @@ import streamlit as st
 #     os.makedirs('/app/repo');
 #     Repo.clone_from('https://github.com/PakinDioxide/Dog-Breed-Classification.git', '/app/repo')
 
-learn_inf = load_learner('/mount/src/dog-breed-classification/models/dbc_resnet50_new_fastai.pkl', cpu=True)
+import streamlit as st
+import sys
+import types
+from fastai.vision.all import *
+import glob
+from PIL import Image
+import os
+
+# --- CRITICAL FIX FOR 2023 MODELS ---
+# This "tricks" the model into finding the moved 'Pipeline' class
+if 'fasttransform' not in sys.modules:
+    # Create a fake fastcore.transform module if it's missing the old paths
+    import fastcore.transform
+    if not hasattr(fastcore.transform, 'Pipeline'):
+        import fasttransform
+        sys.modules['fastcore.transform'].Pipeline = fasttransform.Pipeline
+        sys.modules['fastcore.transform'].Transform = fasttransform.Transform
+
+# Function to safely load the learner
+@st.cache_resource
+def get_model():
+    model_path = '/mount/src/dog-breed-classification/models/dbc_resnet50_new_fastai.pkl'
+    # Fallback for local testing
+    if not os.path.exists(model_path):
+        model_path = 'models/dbc_resnet50_new_fastai.pkl'
+    
+    return load_learner(model_path, cpu=True)
+
+learn_inf = get_model()
+
+# Old
+# learn_inf = load_learner('/mount/src/dog-breed-classification/models/dbc_resnet50_new_fastai.pkl', cpu=True)
 
 # เราจะแบ่งหน้าจอเป็น 
 # 1. sidebar ประกอบด้วยตัวเลือกรูปภาพ
@@ -157,4 +188,5 @@ else:
             if st.sidebar.button("Predict Now!"):
                 # เรียก function ทำนาย
                 predict(img, learn_inf)
+
 
