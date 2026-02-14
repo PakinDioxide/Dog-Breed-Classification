@@ -38,19 +38,46 @@ CLASSES = [
 # 2. MODEL LOADING (RECONSTRUCT ARCHITECTURE)
 @st.cache_resource
 def load_weights_only_model():
-    # Recreate ResNet50 architecture
+    # 1. Reconstruct the standard ResNet50 architecture
     model = models.resnet50()
-    # Replace the last layer to match your 120 classes
     num_ftrs = model.fc.in_features
+    # Match the 120 dog breed classes
     model.fc = nn.Linear(num_ftrs, len(CLASSES))
     
-    # Path to your .pth file
-    weight_path = '/mount/src/dog-breed-classification/models/resnet50_weights.pth'
+    # 2. Path handling for Streamlit Cloud
+    weight_path = 'models/resnet50_weights.pth'
     if not os.path.exists(weight_path):
-        weight_path = 'models/resnet50_weights.pth'
+        weight_path = '/mount/src/dog-breed-classification/models/resnet50_weights.pth'
     
+    # 3. Load the raw state_dict from your LFS upload
+    # map_location='cpu' is essential for Streamlit servers
     state_dict = torch.load(weight_path, map_location=torch.device('cpu'))
-    model.load_state_dict(state_dict)
+    
+    # 4. THE CLEANING LOGIC (The "FastAI to PyTorch" Bridge)
+    new_state_dict = {}
+    
+    # We need to find which layer in the FastAI 'head' is the actual final Linear layer
+    # Usually, it is '1.8.weight' or '1.6.weight'
+    head_keys = [k for k in state_dict.keys() if k.startswith("1.")]
+    last_layer_prefix = ""
+    if head_keys:
+        # Sort and pick the last one (the linear output layer)
+        last_layer_prefix = ".".join(head_keys[-1].split(".")[:2]) + "."
+
+    for key, value in state_dict.items():
+        if key.startswith("0."):
+            # Strip '0.' to map FastAI body weights to standard ResNet layers
+            new_key = key.replace("0.", "", 1)
+            new_state_dict[new_key] = value
+        elif last_layer_prefix and key.startswith(last_layer_prefix):
+            # Map the specific FastAI output layer to standard 'fc'
+            new_key = key.replace(last_layer_prefix, "fc.", 1)
+            new_state_dict[new_key] = value
+    
+    # 5. Load weights into the architecture
+    # strict=False is used because FastAI adds extra BatchNorm layers 
+    # that standard ResNet50 doesn't have in its final head.
+    model.load_state_dict(new_state_dict, strict=False)
     model.eval()
     return model
 
