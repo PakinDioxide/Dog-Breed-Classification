@@ -36,38 +36,57 @@ CLASSES = [
 ]
 
 # 2. MODEL LOADING (RECONSTRUCT ARCHITECTURE)
+# Add this small class at the top of your script
+class FastAIHead(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.pool = nn.AdaptiveAvgPool2d(1)
+        self.mpool = nn.AdaptiveMaxPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(4096, 512),
+            nn.ReLU(inplace=True),
+            nn.Linear(512, len(CLASSES))
+        )
+
+    def forward(self, x):
+        # This is the "Concat Pooling" trick
+        x = torch.cat([self.pool(x), self.mpool(x)], dim=1)
+        x = torch.flatten(x, 1)
+        x = self.fc(x)
+        return x
+
 @st.cache_resource
 def load_weights_only_model():
-    model = models.resnet50()
+    # 1. Load the body
+    full_model = models.resnet50()
     
-    # --- THE CONCAT POOLING FIX ---
-    # FastAI uses Concat Pooling, which doubles the features (2048 * 2 = 4096)
-    model.fc = nn.Sequential(
-        nn.Linear(4096, 512), # Change 2048 to 4096 here
-        nn.ReLU(inplace=True),
-        nn.Linear(512, len(CLASSES))
-    )
-    # -----------------------------
+    # 2. Extract just the body (everything except avgpool and fc)
+    body = nn.Sequential(*list(full_model.children())[:-2])
     
+    # 3. Attach our custom FastAI head
+    model = nn.Sequential(body, FastAIHead())
+    
+    # 4. Path and Load
     weight_path = 'models/resnet50_weights.pth'
     if not os.path.exists(weight_path):
         weight_path = '/mount/src/dog-breed-classification/models/resnet50_weights.pth'
     
     state_dict = torch.load(weight_path, map_location=torch.device('cpu'))
     
+    # 5. Map the weights
     new_state_dict = {}
     for key, value in state_dict.items():
         if key.startswith("0."):
-            new_key = key.replace("0.", "", 1)
-            new_state_dict[new_key] = value
+            # Map body (e.g., 0.4.0.conv1 -> 0.4.0.conv1)
+            new_state_dict[key] = value
         elif "1.4.weight" in key:
-            new_state_dict["fc.0.weight"] = value
+            new_state_dict["1.fc.0.weight"] = value
         elif "1.4.bias" in key:
-            new_state_dict["fc.0.bias"] = value
+            new_state_dict["1.fc.0.bias"] = value
         elif "1.8.weight" in key:
-            new_state_dict["fc.2.weight"] = value
+            new_state_dict["1.fc.2.weight"] = value
         elif "1.8.bias" in key:
-            new_state_dict["fc.2.bias"] = value
+            new_state_dict["1.fc.2.bias"] = value
 
     model.load_state_dict(new_state_dict, strict=False)
     model.eval()
@@ -187,4 +206,3 @@ else:
             if st.sidebar.button("Predict Now!"):
                 # เรียก function ทำนาย
                 predict(img, learn_inf)
-
