@@ -1,54 +1,82 @@
 import streamlit as st
-import sys
+import torch
+import torch.nn as nn
+from torchvision import models
+from fastai.vision.all import PILImage
+from PIL import Image
 import os
 import glob
-from PIL import Image
 
-# --- 1. CRITICAL FIX FOR 2023 MODELS (The Bridge) ---
-# This MUST happen before 'from fastai...' to prevent ImportErrors
-try:
-    import fastcore.transform
-    import fasttransform
-    if not hasattr(fastcore.transform, 'Pipeline'):
-        fastcore.transform.Pipeline = fasttransform.Pipeline
-        fastcore.transform.Transform = fasttransform.Transform
-except ImportError:
-    st.error("Missing dependencies. Please ensure 'fasttransform' and 'ipython' are in requirements.txt")
+# 1. THE LABELS
+CLASSES = [
+    '000_Chihuahua', '001_Japanese_Spaniel', '002_Maltese_Dog', '003_Pekinese', '004_Shih-Tzu',
+    '005_Blenheim_Spaniel', '006_Papillon', '007_Toy_Terrier', '008_Rhodesian_Ridgeback', '009_Afghan_Hound',
+    '010_Basset', '011_Beagle', '012_Bloodhound', '013_Bluetick', '014_Black-and-tan_Coonhound',
+    '015_Walker_Hound', '016_English_Foxhound', '017_Redbone', '018_Borzoi', '019_Irish_Wolfhound',
+    '020_Italian_Greyhound', '021_Whippet', '022_Ibizan_Hound', '023_Norwegian_Elkhound', '024_Otterhound',
+    '025_Saluki', '026_Scottish_Deerhound', '027_Weimaraner', '028_Staffordshire_Bullterrier', '029_American_Staffordshire_Terrier',
+    '030_Bedlington_Terrier', '031_Border_Terrier', '032_Kerry_Blue_Terrier', '033_Irish_Terrier', '034_Norfolk_Terrier',
+    '035_Norwich_Terrier', '036_Yorkshire_Terrier', '037_Wire-haired_Fox_Terrier', '038_Lakeland_Terrier', '039_Sealyham_Terrier',
+    '040_Airedale', '041_Cairn', '042_Australian_Terrier', '043_Dandie_Dinmont', '044_Boston_Bull',
+    '045_Miniature_Schnauzer', '046_Giant_Schnauzer', '047_Standard_Schnauzer', '048_Scotch_Terrier', '049_Tibetan_Terrier',
+    '050_Silky_Terrier', '051_Soft-coated_Wheaten_Terrier', '052_West_Highland_White_Terrier', '053_Lhasa', '054_Flat-coated_Retriever',
+    '055_Curly-coated_Retriever', '056_Golden_Retriever', '057_Labrador_Retriever', '058_Chesapeake_Bay_Retriever', '059_German_Short-haired_Pointer',
+    '060_Vizsla', '061_English_Setter', '062_Irish_Setter', '063_Gordon_Setter', '064_Brittany_Spaniel',
+    '065_Clumber', '066_English_Springer', '067_Welsh_Springer_Spaniel', '068_Cocker_Spaniel', '069_Sussex_Spaniel',
+    '070_Irish_Water_Spaniel', '071_Kuvasz', '072_Schipperke', '073_Groenendael', '074_Malinois',
+    '075_Briard', '076_Kelpie', '077_Komondor', '078_Old_English_Sheepdog', '079_Shetland_Sheepdog',
+    '080_Collie', '081_Border_Collie', '082_Bouvier_Des_Flandres', '083_Rottweiler', '084_German_Shepherd',
+    '085_Doberman', '086_Miniature_Pinscher', '087_Greater_Swiss_Mountain_Dog', '088_Bernese_Mountain_Dog', '089_Appenzeller',
+    '090_EntleBucher', '091_Boxer', '092_Bull_Mastiff', '093_Tibetan_Mastiff', '094_French_Bulldog',
+    '095_Great_Dane', '096_Saint_Bernard', '097_Eskimo_Dog', '098_Malamute', '099_Siberian_Husky',
+    '100_Affenpinscher', '101_Basenji', '102_Pug', '103_Leonberg', '104_Newfoundland',
+    '105_Great_Pyrenees', '106_Samoyed', '107_Pomeranian', '108_Chow', '109_Keeshond',
+    '110_Brabancon_Griffon', '111_Pembroke', '112_Cardigan', '113_Toy_Poodle', '114_Miniature_Poodle',
+    '115_Standard_Poodle', '116_Mexican_Hairless', '117_Dingo', '118_Dhole', '119_African_Hunting_Dog'
+]
 
-# --- 2. NOW IMPORT FASTAI ---
-from fastai.vision.all import *
-
-# --- 3. MODEL LOADING WITH CACHING ---
+# 2. MODEL LOADING (RECONSTRUCT ARCHITECTURE)
 @st.cache_resource
-def get_model():
-    # Streamlit Cloud default path
-    model_path = '/mount/src/dog-breed-classification/models/dbc_resnet50_new_fastai.pkl'
-    # Local development fallback
-    if not os.path.exists(model_path):
-        model_path = 'models/dbc_resnet50_new_fastai.pkl'
+def load_weights_only_model():
+    # Recreate ResNet50 architecture
+    model = models.resnet50()
+    # Replace the last layer to match your 120 classes
+    num_ftrs = model.fc.in_features
+    model.fc = nn.Linear(num_ftrs, len(CLASSES))
     
-    return load_learner(model_path, cpu=True)
+    # Path to your .pth file
+    weight_path = '/mount/src/dog-breed-classification/models/resnet50_weights.pth'
+    if not os.path.exists(weight_path):
+        weight_path = 'models/resnet50_weights.pth'
+    
+    state_dict = torch.load(weight_path, map_location=torch.device('cpu'))
+    model.load_state_dict(state_dict)
+    model.eval()
+    return model
 
-learn_inf = get_model()
+learn_inf = load_weights_only_model()
 
-# --- 4. PREDICTION LOGIC ---
-def predict(img, learn):
-    # Ensure image is RGB
-    img = img.convert("RGB")
-    pimg = PILImage.create(img)
+# 3. PREDICTION LOGIC
+def predict(img, model):
+    img = img.convert("RGB").resize((224, 224)) # Standard ResNet size
+    # Convert to Tensor
+    from torchvision import transforms
+    preprocess = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+    input_tensor = preprocess(img).unsqueeze(0)
+    
+    with torch.no_grad():
+        output = model(input_tensor)
+        probs = torch.nn.functional.softmax(output[0], dim=0)
+        conf, idx = torch.max(probs, 0)
+    
+    # Clean up class name for display
+    raw_name = CLASSES[idx.item()]
+    display_name = ' '.join(raw_name.split('_')[1:])
 
-    pred, pred_idx, pred_prob = learn.predict(pimg)
-
-    # Label processing
-    pred_name = pred.split('_')[1:]
-    if pred_name[-1] == 'Dog':
-        display_name = ' '.join(pred_name[:-1])
-    else:
-        display_name = ' '.join(pred_name)
-
-    st.success(
-        f'This is "{display_name} Dog" with the probability of {pred_prob[pred_idx]*100:.02f}%'
-    )
+    st.success(f'This is a "{display_name}" with {conf*100:.02f}% confidence!')
     st.image(img, use_container_width=True)
     st.balloons()
 
@@ -140,5 +168,6 @@ else:
             if st.sidebar.button("Predict Now!"):
                 # เรียก function ทำนาย
                 predict(img, learn_inf)
+
 
 
